@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://coisadeauditor.com.br/sitemap.xml

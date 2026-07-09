@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Coisa de Auditor — a caixa de ferramentas do auditor</title>
+<meta name="description" content="Ferramentas, notícias e planilhas de auditoria feitas por quem também audita. Calculadoras interativas e papéis de trabalho (walkthrough e workpaper SOX/COSO) prontos para baixar." />
+<link rel="canonical" href="https://coisadeauditor.com.br/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Coisa de Auditor" />
+<meta property="og:locale" content="pt_BR" />
+<meta property="og:url" content="https://coisadeauditor.com.br/" />
+<meta property="og:title" content="Coisa de Auditor — a caixa de ferramentas do auditor" />
+<meta property="og:description" content="Ferramentas, notícias e planilhas de auditoria feitas por quem também audita. Entra, escolhe o que precisa e volta ao trabalho." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Coisa de Auditor — a caixa de ferramentas do auditor" />
+<meta name="twitter:description" content="Ferramentas, notícias e planilhas de auditoria feitas por quem também audita." />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#16242E; --ink-soft:#46555E;
+    --paper:#F4F6F1; --panel:#ECEFE8; --panel-2:#E4E8DF;
+    --line:#D3D9CD; --teal:#15706A; --teal-deep:#0E4F4A;
+    --risk-low:#4E9A6B; --risk-med:#D69A35; --risk-high:#BE4A33;
+    --disp:"Space Grotesk",system-ui,sans-serif;
+    --body:"Newsreader",Georgia,serif;
+    --mono:"JetBrains Mono",ui-monospace,monospace;
+    --maxw:1140px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px;width:100%;}
+  a{color:inherit;}
+  .mono{font-family:var(--mono);}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal-deep);font-weight:500;}
+  h1,h2,h3{font-family:var(--disp);font-weight:600;line-height:1.08;letter-spacing:-.01em;margin:0;}
+  :focus-visible{outline:2.5px solid var(--teal);outline-offset:3px;border-radius:2px;}
+
+  /* NAV */
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(244,246,241,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;}
+  .brand{font-family:var(--mono);font-weight:600;font-size:15px;letter-spacing:.02em;display:flex;align-items:center;gap:9px;text-decoration:none;background:none;border:none;cursor:pointer;color:inherit;}
+  .brand .tick{width:11px;height:11px;border:2px solid var(--teal);border-radius:2px;display:inline-block;position:relative;}
+  .brand .tick::after{content:"";position:absolute;inset:1px;background:var(--teal);transform:scale(.55);}
+  .nav-links{display:flex;gap:8px;align-items:center;}
+  .nav-links button{font-family:var(--mono);font-size:13px;background:none;border:none;cursor:pointer;color:var(--ink-soft);padding:8px 12px;border-radius:6px;transition:color .15s,background .15s;}
+  .nav-links button:hover{color:var(--ink);background:var(--panel);}
+  .nav-links button[aria-current="page"]{color:var(--ink);background:var(--panel-2);}
+  .nav-cta{font-family:var(--mono);font-size:13px;background:var(--ink);border:none;cursor:pointer;color:var(--paper);padding:9px 16px;border-radius:6px;transition:background .15s;margin-left:8px;}
+  .nav-cta:hover{background:var(--teal-deep);}
+
+  main{flex:1;}
+  .view{display:none;}
+  .view.active{display:block;animation:fade .28s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+  /* ---------- CAPA ---------- */
+  .capa-hero{padding:60px 0 20px;}
+  .capa-top{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center;margin-bottom:60px;}
+  .capa-hero h1{font-size:clamp(34px,5vw,56px);margin-top:18px;}
+  .capa-hero h1 em{font-style:normal;color:var(--teal-deep);}
+  .capa-hero p.lede{font-size:21px;color:var(--ink-soft);max-width:36ch;margin:22px 0 0;}
+
+  /* FEATURED NEWS */
+  .featured{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:0;overflow:hidden;display:flex;flex-direction:column;}
+  .featured .fbar{background:var(--ink);color:var(--paper);padding:11px 22px;display:flex;justify-content:space-between;align-items:center;}
+  .featured .fbar .tag{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#7FD0C9;}
+  .featured .fbar .live{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#B9C4C2;display:flex;align-items:center;gap:7px;}
+  .featured .fbar .dot{width:7px;height:7px;border-radius:50%;background:var(--risk-high);display:inline-block;}
+  .featured .fbody{padding:26px 26px 24px;display:flex;flex-direction:column;flex:1;}
+  .featured .src{font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--teal-deep);}
+  .featured h2{font-size:clamp(23px,2.7vw,30px);margin:12px 0 12px;line-height:1.12;}
+  .featured p{margin:0;color:var(--ink-soft);font-size:16px;line-height:1.5;flex:1;}
+  .featured .fgo{font-family:var(--mono);font-size:13px;color:var(--ink);margin-top:20px;display:inline-flex;align-items:center;gap:8px;text-decoration:none;align-self:flex-start;transition:gap .15s,color .15s;}
+  .featured .fgo:hover{gap:14px;color:var(--teal-deep);}
+
+  .menu-label{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:18px;display:block;}
+  .menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;padding-bottom:16px;}
+  .menu-card{text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:28px 26px 24px;cursor:pointer;font-family:inherit;color:inherit;display:flex;flex-direction:column;min-height:220px;transition:transform .16s,border-color .16s,box-shadow .16s;position:relative;}
+  .menu-card:hover{transform:translateY(-4px);border-color:var(--teal);box-shadow:0 12px 30px rgba(20,40,50,.09);}
+  .menu-card .mc-code{font-family:var(--mono);font-size:13px;color:var(--teal-deep);letter-spacing:.06em;}
+  .menu-card .mc-heat{position:absolute;top:28px;right:26px;width:9px;height:9px;border-radius:50%;}
+  .menu-card h2{font-size:27px;margin:14px 0 10px;}
+  .menu-card p{margin:0;color:var(--ink-soft);font-size:16px;line-height:1.5;flex:1;}
+  .menu-card .mc-go{font-family:var(--mono);font-size:13px;color:var(--ink);margin-top:18px;display:inline-flex;align-items:center;gap:8px;transition:gap .15s;}
+  .menu-card:hover .mc-go{gap:14px;color:var(--teal-deep);}
+
+  /* MATRIX (now inside Ferramentas) */
+  .matrix-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 22px 18px;max-width:420px;}
+  .matrix-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;}
+  .matrix-head .label{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);}
+  .matrix-body{display:flex;gap:10px;}
+  .axis-y{display:flex;align-items:center;}
+  .axis-y span{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);writing-mode:vertical-rl;transform:rotate(180deg);}
+  .grid5{display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr);gap:5px;flex:1;aspect-ratio:1/.86;}
+  .cell{border-radius:5px;cursor:pointer;position:relative;transition:transform .12s,box-shadow .12s;border:1px solid rgba(0,0,0,.04);}
+  .cell:hover,.cell:focus-visible{transform:scale(1.07);box-shadow:0 4px 14px rgba(0,0,0,.14);z-index:2;}
+  .cell[data-level="low"]{background:color-mix(in srgb,var(--risk-low) 78%,#fff);}
+  .cell[data-level="med"]{background:color-mix(in srgb,var(--risk-med) 82%,#fff);}
+  .cell[data-level="high"]{background:color-mix(in srgb,var(--risk-high) 85%,#fff);}
+  .axis-x{display:flex;justify-content:center;margin-top:8px;}
+  .axis-x span{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);}
+  .matrix-read{display:flex;justify-content:space-between;align-items:center;margin-top:14px;border-top:1px solid var(--line);padding-top:12px;font-family:var(--mono);font-size:12px;}
+  .matrix-read .val{font-weight:600;}
+  .legend{display:flex;gap:14px;}
+  .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle;}
+  .matrix-wrap{display:grid;grid-template-columns:420px 1fr;gap:36px;align-items:center;margin-bottom:52px;padding-bottom:48px;border-bottom:1px solid var(--line);}
+  .matrix-wrap .mw-copy h3{font-size:23px;margin-bottom:10px;}
+  .matrix-wrap .mw-copy p{margin:0;color:var(--ink-soft);font-size:16px;max-width:42ch;}
+
+  /* INNER VIEW SHELL */
+  .view-head{padding:56px 0 40px;border-bottom:1px solid var(--line);}
+  .back{font-family:var(--mono);font-size:13px;color:var(--ink-soft);background:none;border:none;cursor:pointer;padding:0;margin-bottom:20px;display:inline-flex;align-items:center;gap:7px;transition:color .15s;}
+  .back:hover{color:var(--teal-deep);}
+  .view-head h1{font-size:clamp(30px,4.4vw,46px);margin-top:12px;}
+  .view-head p{color:var(--ink-soft);font-size:20px;margin:16px 0 0;max-width:60ch;}
+  .view-body{padding:44px 0 72px;}
+
+  /* TOOLS */
+  .tools{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  .tool{background:var(--paper);border:1.5px solid var(--line);border-radius:12px;padding:24px;display:flex;flex-direction:column;min-height:210px;transition:border-color .15s,transform .15s;}
+  .tool:hover{border-color:var(--teal);transform:translateY(-2px);}
+  .tool.lead{border-color:var(--teal);background:linear-gradient(180deg,var(--panel),var(--paper));}
+  .status{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;padding:4px 9px;border-radius:20px;align-self:flex-start;}
+  .status.study{background:var(--risk-med);color:#3a2a06;}
+  .status.plan{background:var(--panel-2);color:var(--ink-soft);}
+  .tool h3{font-size:20px;margin:16px 0 8px;}
+  .tool p{margin:0;font-size:15px;color:var(--ink-soft);line-height:1.5;flex:1;}
+  .tool .note{font-family:var(--mono);font-size:12px;color:var(--teal-deep);margin-top:14px;}
+
+  /* SHEETS */
+  .group-label{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-deep);margin:12px 0 0;}
+  .group-label.second{margin-top:48px;}
+  .sheet-list{border-top:1px solid var(--line);margin-top:16px;}
+  .sheet{display:grid;grid-template-columns:auto 1fr auto;gap:22px;align-items:center;padding:22px 4px;border-bottom:1px solid var(--line);transition:padding-left .15s;}
+  .sheet:hover{padding-left:10px;}
+  .sheet .num{font-family:var(--mono);font-size:13px;color:var(--ink-soft);}
+  .sheet .s-main h3{font-size:21px;}
+  .sheet .s-main p{margin:4px 0 0;color:var(--ink-soft);font-size:15px;}
+  .sheet .get{font-family:var(--mono);font-size:13px;color:var(--teal-deep);white-space:nowrap;text-decoration:none;border:1.5px solid var(--line);padding:8px 14px;border-radius:6px;transition:border-color .15s,background .15s;cursor:pointer;}
+  .sheet .get:hover{border-color:var(--teal);background:var(--panel);}
+
+  /* NEWS FEED */
+  .feed{border-top:1px solid var(--line);margin-bottom:30px;}
+  .item{display:grid;grid-template-columns:170px 1fr auto;gap:24px;align-items:baseline;padding:22px 4px;border-bottom:1px solid var(--line);transition:padding-left .15s;text-decoration:none;color:inherit;}
+  .item:hover{padding-left:10px;}
+  .item .src{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--teal-deep);}
+  .item .headline h3{font-size:20px;line-height:1.2;}
+  .item .headline p{margin:6px 0 0;color:var(--ink-soft);font-size:15px;}
+  .item .go{font-family:var(--mono);font-size:13px;color:var(--ink-soft);white-space:nowrap;}
+  .item:hover .go{color:var(--teal);}
+  .sample-note{font-family:var(--mono);font-size:12px;color:var(--ink-soft);background:var(--panel);border:1px dashed var(--line);border-radius:8px;padding:12px 16px;margin-bottom:26px;}
+
+  /* SURVEY */
+  .survey-band{background:var(--ink);color:var(--paper);border-radius:14px;padding:34px 36px;display:grid;grid-template-columns:1fr auto;gap:34px;align-items:center;}
+  .survey-band .eyebrow{color:#7FD0C9;}
+  .survey-band h3{color:var(--paper);font-size:clamp(22px,3vw,30px);margin-top:10px;}
+  .survey-band p{color:#B9C4C2;font-size:17px;margin:12px 0 0;max-width:52ch;}
+  .survey-band .s-cta{margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;}
+  .btn{font-family:var(--mono);font-size:14px;text-decoration:none;padding:13px 22px;border-radius:7px;font-weight:500;transition:transform .12s,background .15s,border-color .15s;display:inline-block;cursor:pointer;border:none;}
+  .btn-primary{background:var(--teal);color:#fff;}
+  .btn-primary:hover{background:var(--teal-deep);transform:translateY(-1px);}
+  .btn-ghost{border:1.5px solid var(--line);color:var(--ink);background:none;}
+  .btn-ghost:hover{border-color:var(--ink);}
+  .survey-band .btn-primary{background:#7FD0C9;color:#0E2A28;}
+  .survey-band .btn-primary:hover{background:#9BDDD7;}
+  .survey-band .btn-ghost{border-color:#3A4D4B;color:var(--paper);}
+  .survey-band .btn-ghost:hover{border-color:#7FD0C9;}
+  .survey-band .big{font-family:var(--disp);font-size:clamp(48px,8vw,88px);font-weight:600;line-height:.9;color:#7FD0C9;letter-spacing:-.02em;text-align:right;}
+  .survey-band .big-sub{font-family:var(--mono);font-size:12px;color:#8FA09E;letter-spacing:.06em;margin-top:8px;text-align:right;}
+
+  /* NEWSLETTER */
+  .news-sec{background:var(--panel);border-radius:16px;padding:48px 44px;margin:8px 0 64px;}
+  .news-inner{max-width:620px;}
+  .news-inner h2{font-size:clamp(24px,3.2vw,34px);margin-top:12px;}
+  .news-inner p{color:var(--ink-soft);font-size:19px;margin:14px 0 26px;}
+  form.signup{display:flex;gap:10px;flex-wrap:wrap;}
+  form.signup input{flex:1;min-width:220px;font-family:var(--mono);font-size:15px;padding:14px 16px;border:1.5px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);}
+  form.signup input:focus{outline:none;border-color:var(--teal);}
+  form.signup button{font-family:var(--mono);font-size:14px;font-weight:500;padding:14px 24px;border:none;border-radius:8px;background:var(--ink);color:var(--paper);cursor:pointer;transition:background .15s;}
+  form.signup button:hover{background:var(--teal-deep);}
+  .news-inner .ok{font-family:var(--mono);font-size:14px;color:var(--teal-deep);margin-top:16px;min-height:20px;}
+  .news-inner .fineprint{font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin-top:14px;}
+
+  /* FOOTER */
+  footer{padding:34px 0 44px;border-top:1px solid var(--line);}
+  .foot-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px;}
+  .foot-inner .brand{font-size:14px;}
+  .foot-inner small{font-family:var(--mono);font-size:12px;color:var(--ink-soft);max-width:44ch;text-align:right;}
+
+  @media (max-width:860px){
+    .capa-top{grid-template-columns:1fr;gap:36px;}
+    .menu-grid,.tools{grid-template-columns:1fr;}
+    .matrix-wrap{grid-template-columns:1fr;gap:24px;}
+    .matrix-card{max-width:none;}
+    .item{grid-template-columns:1fr;gap:8px;}
+    .item .go{display:none;}
+    .survey-band{grid-template-columns:1fr;gap:20px;}
+    .survey-band .big,.survey-band .big-sub{text-align:left;}
+    .foot-inner small{text-align:left;}
+    .nav-links{gap:2px;}
+    .nav-links button{padding:8px 8px;font-size:12px;}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important;}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <button class="brand" data-view="capa"><span class="tick"></span>Coisa de Auditor</button>
+    <nav class="nav-links">
+      <button data-view="capa">Capa</button>
+      <button data-view="ferramentas">Ferramentas</button>
+      <button data-view="noticias">Notícias</button>
+      <button data-view="planilhas">Planilhas</button>
+      <button class="nav-cta" data-view="capa" data-scroll="newsletter">Newsletter</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ CAPA / MENU ============ -->
+  <section class="view" id="view-capa">
+    <div class="wrap capa-hero">
+      <div class="capa-top">
+        <div>
+          <span class="eyebrow">Ferramentas · Notícias · Planilhas</span>
+          <h1>A caixa de ferramentas do <em>Auditor</em>.</h1>
+          <p class="lede">Entra, escolhe o que precisa e volta ao trabalho. Sem enrolação, feito por quem também audita.</p>
+        </div>
+
+        <article class="featured">
+          <div class="fbar">
+            <span class="tag">Em destaque</span>
+            <span class="live"><span class="dot"></span>Notícia da semana</span>
+          </div>
+          <div class="fbody">
+            <span class="src">Grant Thornton · fev/2026</span>
+            <h2>IA e o futuro da auditoria interna</h2>
+            <p>Por que importa: a área tem uma vantagem dupla e rara — pode usar IA para ganhar profundidade e, ao mesmo tempo, é quem audita como as outras áreas usam. Bom ponto de partida para posicionar seu papel de trabalho.</p>
+            <a class="fgo" href="https://www.grantthornton.com.br/insights/artigos-e-publicacoes/inteligencia-artificial-e-o-futuro-da-auditoria-interna/" target="_blank" rel="noopener">ler na fonte →</a>
+          </div>
+        </article>
+      </div>
+
+      <span class="menu-label">Escolha por onde começar</span>
+      <div class="menu-grid">
+        <button class="menu-card" data-view="ferramentas">
+          <span class="mc-heat" style="background:var(--teal)"></span>
+          <span class="mc-code">01</span>
+          <h2>Ferramentas</h2>
+          <p>Calculadoras e utilitários interativos — como a calculadora de risco e materialidade.</p>
+          <span class="mc-go">entrar →</span>
+        </button>
+        <button class="menu-card" data-view="noticias">
+          <span class="mc-heat" style="background:var(--risk-med)"></span>
+          <span class="mc-code">02</span>
+          <h2>Notícias</h2>
+          <p>O que mexeu no mercado de auditoria, com curadoria e link para a fonte.</p>
+          <span class="mc-go">entrar →</span>
+        </button>
+        <button class="menu-card" data-view="planilhas">
+          <span class="mc-heat" style="background:var(--risk-low)"></span>
+          <span class="mc-code">03</span>
+          <h2>Planilhas</h2>
+          <p>Modelos para usar no dia a dia e planilhas para os seus testes de auditoria.</p>
+          <span class="mc-go">entrar →</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <div class="news-sec" id="newsletter">
+        <div class="news-inner">
+          <span class="eyebrow">A lista do Coisa de Auditor</span>
+          <h2>Um e-mail por semana, do tamanho de um intervalo.</h2>
+          <p>As ferramentas novas, as planilhas para baixar e o resumo do mercado — direto no seu e-mail.</p>
+          <form class="signup" id="signup" novalidate>
+            <input type="email" id="email" placeholder="seu@email.com" aria-label="Seu e-mail" required />
+            <button type="submit">Quero receber</button>
+          </form>
+          <div class="ok" id="okmsg" role="status" aria-live="polite"></div>
+          <p class="fineprint">Sem spam. Cancele quando quiser. // protótipo: ainda não envia para lugar nenhum.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FERRAMENTAS ============ -->
+  <section class="view" id="view-ferramentas">
+    <div class="wrap view-head">
+      <button class="back" data-view="capa">← voltar à capa</button>
+      <span class="eyebrow">Aba 01</span>
+      <h1>Ferramentas</h1>
+      <p>Interativas, gratuitas e diretas ao ponto. Abre, usa, resolve. As ferramentas entram aqui conforme ficam prontas.</p>
+    </div>
+    <div class="wrap view-body">
+
+      <div class="matrix-wrap">
+        <div class="matrix-card" aria-label="Matriz de risco interativa cinco por cinco">
+          <div class="matrix-head">
+            <span class="label">Matriz de risco 5×5</span>
+            <span class="label">Prob. × Impacto</span>
+          </div>
+          <div class="matrix-body">
+            <div class="axis-y"><span>Impacto →</span></div>
+            <div class="grid5" id="grid5" role="grid"></div>
+          </div>
+          <div class="axis-x"><span>Probabilidade →</span></div>
+          <div class="matrix-read">
+            <div class="legend">
+              <span><i style="background:color-mix(in srgb,var(--risk-low) 78%,#fff)"></i>Baixo</span>
+              <span><i style="background:color-mix(in srgb,var(--risk-med) 82%,#fff)"></i>Médio</span>
+              <span><i style="background:color-mix(in srgb,var(--risk-high) 85%,#fff)"></i>Alto</span>
+            </div>
+            <div class="val" id="readout">passe o mouse →</div>
+          </div>
+        </div>
+        <div class="mw-copy">
+          <h3>Prévia da calculadora</h3>
+          <p>Passe o mouse pela matriz para ver como probabilidade × impacto vira nível de risco. A calculadora de risco e materialidade, em estudo, vai partir exatamente daqui.</p>
+        </div>
+      </div>
+
+      <div class="tools">
+        <article class="tool lead">
+          <span class="status study">Em estudo</span>
+          <h3>Calculadora de risco &amp; materialidade</h3>
+          <p>Probabilidade, impacto e base de cálculo entram; nível de risco e limite de materialidade saem, prontos para o papel de trabalho. Espaço já reservado para ela.</p>
+          <span class="note">// em estudo</span>
+        </article>
+        <article class="tool">
+          <span class="status plan">Planejada</span>
+          <h3>Gerador de matriz de risco</h3>
+          <p>Monte a matriz 5×5 com os riscos do seu escopo e exporte como imagem ou tabela.</p>
+          <span class="note">// na fila</span>
+        </article>
+        <article class="tool">
+          <span class="status plan">Planejada</span>
+          <h3>Checklist de LGPD</h3>
+          <p>Responda ao checklist de adequação e gere um relatório de lacunas em PDF.</p>
+          <span class="note">// na fila</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ NOTÍCIAS ============ -->
+  <section class="view" id="view-noticias">
+    <div class="wrap view-head">
+      <button class="back" data-view="capa">← voltar à capa</button>
+      <span class="eyebrow">Aba 02</span>
+      <h1>Notícias &amp; mercado</h1>
+      <p>Curadoria com a fonte original e uma linha nossa de por que aquilo importa para o seu trabalho. Sem copiar matéria de ninguém — só o que vale a sua atenção.</p>
+    </div>
+    <div class="wrap view-body">
+      <div class="sample-note">// curadoria inicial com fontes reais — os links levam ao artigo original</div>
+      <div class="feed">
+        <a class="item" href="https://www.grantthornton.com.br/insights/artigos-e-publicacoes/inteligencia-artificial-e-o-futuro-da-auditoria-interna/" target="_blank" rel="noopener">
+          <span class="src">Grant Thornton · fev/2026</span>
+          <div class="headline"><h3>IA e o futuro da auditoria interna</h3><p>Por que importa: usar IA e auditar quem usa — a dupla função que redefine o escopo da área.</p></div>
+          <span class="go">fonte →</span>
+        </a>
+        <a class="item" href="https://www.dataprivacybr.org/ja-ajustou-sua-agenda-com-a-da-anpd/" target="_blank" rel="noopener">
+          <span class="src">Data Privacy BR · jan/2026</span>
+          <div class="headline"><h3>ANPD define temas prioritários de fiscalização para 2026-2027</h3><p>Por que importa: mostra onde a fiscalização vai bater — pontos de atenção para o seu escopo de LGPD.</p></div>
+          <span class="go">fonte →</span>
+        </a>
+        <a class="item" href="https://iiabrasil.org.br/noticia/auditoria-interna-e-inteligencia-artificial-uma-alianca-fundamental-para-a-relevancia" target="_blank" rel="noopener">
+          <span class="src">IIA Brasil · out/2025</span>
+          <div class="headline"><h3>IIA Brasil: IA e auditoria interna, aliança para a relevância</h3><p>Por que importa: a visão do instituto sobre incorporar IA aos trabalhos, com responsabilidade.</p></div>
+          <span class="go">fonte →</span>
+        </a>
+      </div>
+
+      <div class="survey-band">
+        <div>
+          <span class="eyebrow">Dado original da casa</span>
+          <h3>Pesquisa de Salários — Auditoria de TI no Brasil</h3>
+          <p>Quanto ganha júnior, pleno e sênior? Responda em 2 minutos, anônimo, e receba o relatório antes de todo mundo.</p>
+          <div class="s-cta">
+            <a href="#" class="btn btn-primary">Responder (2 min)</a>
+            <button class="btn btn-ghost" data-view="capa" data-scroll="newsletter">Quero o relatório</button>
+          </div>
+        </div>
+        <div>
+          <div class="big">2026</div>
+          <div class="big-sub">1ª edição · exclusivo</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PLANILHAS ============ -->
+  <section class="view" id="view-planilhas">
+    <div class="wrap view-head">
+      <button class="back" data-view="capa">← voltar à capa</button>
+      <span class="eyebrow">Aba 03</span>
+      <h1>Planilhas</h1>
+      <p>Padronizadas, prontas para preencher e baixar. Separei em dois grupos: as que você usa direto e as que estruturam os seus testes de auditoria.</p>
+    </div>
+    <div class="wrap view-body">
+      <span class="group-label">Planilhas utilizáveis — para usar no dia a dia</span>
+      <div class="sheet-list">
+        <div class="sheet">
+          <span class="num">XLS·01</span>
+          <div class="s-main"><h3>Matriz de risco</h3><p>Cálculo automático de severidade e heatmap 5×5, pronta para o seu escopo.</p></div>
+          <span class="get" style="opacity:.55;cursor:default">Em breve</span>
+        </div>
+        <div class="sheet">
+          <span class="num">DOC·02</span>
+          <div class="s-main"><h3>Modelo de parecer técnico</h3><p>Estrutura de parecer com achados, riscos e recomendações.</p></div>
+          <span class="get" style="opacity:.55;cursor:default">Em breve</span>
+        </div>
+      </div>
+
+      <span class="group-label second">Planilhas para testes — para documentar a auditoria</span>
+      <div class="sheet-list">
+        <div class="sheet">
+          <span class="num">XLS·03</span>
+          <div class="s-main"><h3>Walkthrough (teste de caminhamento)</h3><p>Roteiro para percorrer o processo ponta a ponta e confirmar o entendimento dos controles.</p></div>
+          <a class="get" href="downloads/walkthrough-coisadeauditor.xlsx" download>Baixar →</a>
+        </div>
+        <div class="sheet">
+          <span class="num">XLS·04</span>
+          <div class="s-main"><h3>Papel de trabalho (workpaper)</h3><p>Teste de efetividade com base SOX/COSO: atributos, amostragem, exceções e conclusão automática.</p></div>
+          <a class="get" href="downloads/workpaper-sox-coisadeauditor.xlsx" download>Baixar →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-inner">
+    <button class="brand" data-view="capa"><span class="tick"></span>Coisa de Auditor</button>
+    <small>coisadeauditor.com.br · mantido por um auditor, para auditores · 2026</small>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var grid=document.getElementById('grid5');var readout=document.getElementById('readout');
+    if(!grid)return;
+    for(var impact=5;impact>=1;impact--){
+      for(var prob=1;prob<=5;prob++){
+        var score=impact*prob;
+        var level=score<=6?'low':(score<=12?'med':'high');
+        var c=document.createElement('div');
+        c.className='cell';c.setAttribute('data-level',level);c.setAttribute('role','gridcell');c.setAttribute('tabindex','0');
+        c.dataset.score=score;c.dataset.prob=prob;c.dataset.impact=impact;
+        var lbl=level==='low'?'Baixo':(level==='med'?'Médio':'Alto');
+        c.setAttribute('aria-label','Probabilidade '+prob+', impacto '+impact+', risco '+lbl);
+        var show=function(el){var lv=el.dataset.score<=6?'Baixo':(el.dataset.score<=12?'Médio':'Alto');readout.textContent='P'+el.dataset.prob+' × I'+el.dataset.impact+' = '+el.dataset.score+' · '+lv;};
+        c.addEventListener('mouseenter',function(){show(this);});
+        c.addEventListener('focus',function(){show(this);});
+        grid.appendChild(c);
+      }
+    }
+  })();
+
+  (function(){
+    var views=['capa','ferramentas','noticias','planilhas'];
+    var navBtns=document.querySelectorAll('.nav-links button[data-view]');
+    function show(name,scrollTo){
+      if(views.indexOf(name)<0)name='capa';
+      document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
+      var el=document.getElementById('view-'+name);
+      if(el)el.classList.add('active');
+      navBtns.forEach(function(b){
+        if(b.classList.contains('nav-cta'))return;
+        b.setAttribute('aria-current', b.dataset.view===name ? 'page' : 'false');
+      });
+      if(scrollTo){
+        var t=document.getElementById(scrollTo);
+        if(t){t.scrollIntoView({behavior:'smooth',block:'start'});return;}
+      }
+      window.scrollTo({top:0,behavior:'auto'});
+    }
+    document.addEventListener('click',function(e){
+      var trg=e.target.closest('[data-view]');
+      if(!trg)return;
+      // let real external links (news/featured) behave normally
+      if(trg.tagName==='A' && trg.getAttribute('href') && trg.getAttribute('href').charAt(0)!=='#') return;
+      e.preventDefault();
+      var name=trg.dataset.view;var sc=trg.dataset.scroll||null;
+      if(('#'+name)!==location.hash && !sc){location.hash=name;}
+      else{show(name,sc);}
+    });
+    window.addEventListener('hashchange',function(){show((location.hash||'#capa').slice(1));});
+    show((location.hash||'#capa').slice(1));
+  })();
+
+  (function(){
+    var form=document.getElementById('signup');var ok=document.getElementById('okmsg');
+    if(!form)return;
+    form.addEventListener('submit',function(e){
+      e.preventDefault();
+      var email=document.getElementById('email');var v=(email.value||'').trim();
+      if(!v||v.indexOf('@')<1){ok.textContent='✗ digite um e-mail válido';return;}
+      ok.textContent='✓ pronto — quando o site subir, '+v+' entra na lista.';
+      email.value='';
+    });
+  })();
+</script>
+</body>
+</html>
