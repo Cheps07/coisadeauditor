@@ -4,14 +4,14 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Coisa de Auditor — a caixa de ferramentas do auditor</title>
-<meta name="description" content="Ferramentas, notícias e planilhas de auditoria feitas por quem também audita. Calculadoras interativas e papéis de trabalho (walkthrough e workpaper SOX/COSO) prontos para baixar." />
+<meta name="description" content="Calculadora online de matriz de riscos baseada em COSO ERM, ISO 31000 e práticas do IIA — com relatório de riscos na hora. Notícias e planilhas de auditoria: walkthrough, workpaper SOX/COSO e modelo de relatório prontos para baixar." />
 <link rel="canonical" href="https://coisadeauditor.com.br/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Coisa de Auditor" />
 <meta property="og:locale" content="pt_BR" />
 <meta property="og:url" content="https://coisadeauditor.com.br/" />
 <meta property="og:title" content="Coisa de Auditor — a caixa de ferramentas do auditor" />
-<meta property="og:description" content="Ferramentas, notícias e planilhas de auditoria feitas por quem também audita. Entra, escolhe o que precisa e volta ao trabalho." />
+<meta property="og:description" content="Calculadora de matriz de riscos com relatório na hora, notícias e planilhas de auditoria. Entra, escolhe o que precisa e volta ao trabalho." />
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Coisa de Auditor — a caixa de ferramentas do auditor" />
 <meta name="twitter:description" content="Ferramentas, notícias e planilhas de auditoria feitas por quem também audita." />
@@ -231,6 +231,61 @@
   footer .brand .tick::after{border-color:var(--teal-700);}
   .foot-inner small{font-family:var(--mono);font-size:12px;color:#8fb0a9;max-width:46ch;text-align:right;}
 
+  /* ============ CALCULADORA ============ */
+  .flagship{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--dark-2),var(--dark));color:#fff;border-radius:var(--r-xl);padding:38px 42px;margin-top:26px;display:grid;grid-template-columns:1fr auto;gap:34px;align-items:center;box-shadow:var(--shadow-lg);}
+  .flagship::before{content:"";position:absolute;inset:0;background:radial-gradient(560px 300px at 100% 0%,rgba(23,195,156,.26),transparent 60%);pointer-events:none;}
+  .flagship-copy{position:relative;}
+  .flagship .eyebrow{color:var(--mint);}
+  .flagship h2{color:#fff;font-size:clamp(24px,3.2vw,34px);margin:12px 0 0;}
+  .flagship p{color:#c8ded8;font-size:17px;margin:12px 0 0;max-width:58ch;}
+  .flagship .btn{margin-top:22px;}
+  .flagship-grid{position:relative;display:grid;grid-template-columns:repeat(5,28px);grid-auto-rows:28px;gap:5px;}
+  .flagship-grid i{border-radius:7px;}
+  .status.live{background:color-mix(in srgb,var(--mint) 22%,#fff);color:var(--teal-700);}
+  .calc-shell{max-width:900px;}
+  .calc-top{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:20px;}
+  .calc-progress{display:flex;gap:6px;}
+  .calc-progress b{width:32px;height:6px;border-radius:99px;background:var(--tint-2);}
+  .calc-progress b.on{background:var(--teal);}
+  .calc-card{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-md);padding:30px;}
+  .calc-card h3{font-size:23px;}
+  .q{margin:24px 0 0;}
+  .q .q-title{font-weight:600;font-size:16px;}
+  .q .q-help{font-size:13.5px;color:var(--muted);margin:3px 0 10px;}
+  .opts{display:grid;gap:8px;}
+  .opt{display:flex;gap:12px;align-items:flex-start;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;transition:border-color .12s,background .12s;font-size:14.5px;color:var(--ink-2);}
+  .opt:hover{border-color:var(--teal);}
+  .opt input{accent-color:var(--teal);margin-top:3px;flex-shrink:0;}
+  .opt span:first-of-type{flex:1;}
+  .opt.sel{border-color:var(--teal);background:var(--tint);color:var(--ink);}
+  .opt .on{font-family:var(--mono);font-size:11px;color:var(--teal-700);background:var(--tint-2);border-radius:99px;padding:2px 8px;white-space:nowrap;align-self:center;}
+  .calc-nav{display:flex;justify-content:space-between;gap:12px;margin-top:24px;flex-wrap:wrap;}
+  .field{margin-top:16px;}
+  .field label{font-weight:600;font-size:15px;display:block;margin-bottom:6px;}
+  .field input,.field select,.field textarea{width:100%;font-family:var(--body);font-size:15px;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--teal);}
+  .field textarea{min-height:74px;resize:vertical;}
+  .field .hint{font-size:12.5px;color:var(--muted);margin-top:5px;}
+  .err{color:var(--coral);font-size:13.5px;margin-top:12px;min-height:18px;font-weight:500;}
+  .badge-nv{display:inline-block;font-weight:700;font-size:13px;padding:5px 14px;border-radius:99px;color:#fff;}
+  .nv-baixo{background:var(--risk-low);} .nv-moderado{background:var(--risk-med);} .nv-alto{background:#d96a2b;} .nv-critico{background:var(--risk-high);}
+  .res-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px;}
+  .res-box{border:1px solid var(--line);border-radius:14px;padding:18px;background:var(--tint);}
+  .res-box .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+  .res-box .big-n{font-family:var(--disp);font-size:34px;font-weight:700;margin:6px 0 6px;}
+  .mini5{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;max-width:250px;margin-top:10px;}
+  .mini5 i{aspect-ratio:1;border-radius:5px;opacity:.55;}
+  .mini5 i.hit{opacity:1;outline:2.5px solid var(--ink);outline-offset:1px;}
+  .report-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:14px;}
+  .report-table th{background:var(--dark);color:#fff;padding:9px 10px;text-align:left;font-weight:600;white-space:nowrap;}
+  .report-table td{border:1px solid var(--line);padding:8px 10px;vertical-align:top;}
+  @media print{
+    body *{visibility:hidden;}
+    #report-print,#report-print *{visibility:visible;}
+    #report-print{position:absolute;left:0;top:0;width:100%;box-shadow:none;border:none;}
+    .no-print{display:none!important;}
+  }
+
   /* ============ RESPONSIVE ============ */
   @media (max-width:900px){
     .featured{grid-template-columns:1fr;margin-top:-72px;}
@@ -244,6 +299,9 @@
     .featured-body{padding:28px 26px;}
     .nav-links button{padding:8px 9px;font-size:13px;}
     .nav-links{gap:0;}
+    .flagship{grid-template-columns:1fr;padding:30px 24px;}
+    .res-grid{grid-template-columns:1fr;}
+    .calc-card{padding:22px 18px;}
   }
   @media (max-width:560px){
     .news-grid{grid-template-columns:1fr;}
@@ -260,6 +318,7 @@
     <button class="brand" data-view="capa"><span class="tick"></span>Coisa de Auditor</button>
     <nav class="nav-links">
       <button data-view="capa">Capa</button>
+      <button data-view="calculadora">Calculadora</button>
       <button data-view="ferramentas">Ferramentas</button>
       <button data-view="noticias">Notícias</button>
       <button data-view="planilhas">Planilhas</button>
@@ -279,7 +338,7 @@
         <h1>A caixa de ferramentas do <em>Auditor</em>.</h1>
         <p class="lede">Entra, escolhe o que precisa e volta ao trabalho. Sem enrolação, feito por quem também audita.</p>
         <div class="hero-cta">
-          <button class="btn btn-primary" data-view="ferramentas">Explorar ferramentas →</button>
+          <button class="btn btn-primary" data-view="calculadora">Calcular meus riscos →</button>
           <button class="btn btn-ghost" data-view="capa" data-scroll="newsletter">Receber a newsletter</button>
         </div>
       </div>
@@ -299,6 +358,17 @@
           <a class="btn btn-primary" href="https://www.grantthornton.com.br/insights/artigos-e-publicacoes/inteligencia-artificial-e-o-futuro-da-auditoria-interna/" target="_blank" rel="noopener">Ler a notícia →</a>
         </div>
       </article>
+
+      <!-- FERRAMENTA PRINCIPAL -->
+      <div class="flagship">
+        <div class="flagship-copy">
+          <span class="eyebrow">Ferramenta principal · no ar</span>
+          <h2>Calculadora de Matriz de Riscos</h2>
+          <p>Responda a um roteiro guiado baseado em COSO ERM, ISO 31000 e nas práticas do IIA. A calculadora pontua probabilidade × impacto, avalia a maturidade dos seus controles e gera um relatório de riscos pronto para anexar ao papel de trabalho.</p>
+          <button class="btn btn-primary" data-view="calculadora">Calcular meus riscos →</button>
+        </div>
+        <div class="flagship-grid" id="flagGrid" aria-hidden="true"></div>
+      </div>
     </div>
 
     <div class="section">
@@ -352,6 +422,40 @@
     </div>
   </section>
 
+  <!-- ============ CALCULADORA DE RISCOS ============ -->
+  <section class="view" id="view-calculadora">
+    <div class="view-head">
+      <div class="wrap">
+        <button class="back" data-view="capa">← voltar à capa</button>
+        <span class="eyebrow">Ferramenta principal</span>
+        <h1>Calculadora de Matriz de Riscos</h1>
+        <p>Avaliação guiada com base em COSO ERM 2017, ISO 31000:2018 e práticas do IIA: você responde às perguntas, a calculadora pontua probabilidade, impacto e controles — e gera o relatório de riscos na hora.</p>
+      </div>
+    </div>
+    <div class="view-body">
+      <div class="wrap calc-shell">
+        <div class="calc-top">
+          <div class="calc-progress" id="calcProg" aria-hidden="true"></div>
+          <span class="mono" style="font-size:12px;color:var(--muted)">🔒 seus dados não saem do navegador</span>
+        </div>
+        <div id="calcArea"></div>
+        <details style="margin-top:28px;">
+          <summary class="mono" style="cursor:pointer;font-size:13px;color:var(--teal-700)">Como a calculadora pontua (metodologia)</summary>
+          <div style="font-size:14.5px;color:var(--ink-2);margin-top:12px;line-height:1.75">
+            <b>Probabilidade inerente</b> — média ponderada de 5 fatores: histórico de ocorrência (25%), exposição do processo (20%), complexidade (20%), dependência de pessoas (15%) e ambiente/mudanças (20%). Resultado arredondado para a escala 1–5.<br>
+            <b>Impacto</b> — avaliado em 5 dimensões (financeira, regulatória, reputacional, operacional e pessoas/dados); vale a <b>maior</b> dimensão, abordagem conservadora padrão em ERM. Se você informar a base de materialidade, as faixas financeiras são calculadas como % dela.<br>
+            <b>Risco inerente</b> = Probabilidade × Impacto, na matriz 5×5: Baixo ≤ 6 · Moderado 8–12 · Alto 15–16 · Crítico ≥ 20.<br>
+            <b>Risco residual</b> — a maturidade dos controles (5 perguntas: desenho, execução, automação, testes e segregação) reduz a probabilidade em até 60%. Nenhum controle elimina risco por completo, por isso o teto.<br>
+            <b>Probabilidade de materialização</b> — estimada por faixas conforme a probabilidade residual: 1 → até 10% · 2 → 10–30% · 3 → 30–50% · 4 → 50–70% · 5 → acima de 70%.<br>
+            <b>Apetite de risco</b> — Baixo aceita residual até 6; Moderado até 12; Alto até 16. Riscos acima do apetite recebem recomendação de tratamento (mitigar, transferir ou evitar), conforme ISO 31000.<br>
+            <span style="color:var(--muted)">Esta ferramenta apoia — e não substitui — o julgamento profissional do auditor.</span>
+          </div>
+        </details>
+        <p class="mono" style="font-size:12px;color:var(--muted);margin-top:18px;">Prefere trabalhar no Excel? <a href="downloads/matriz-de-riscos-coisadeauditor.xlsx" download style="color:var(--teal-700);text-decoration:underline;">Baixe a planilha da matriz de riscos →</a></p>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ FERRAMENTAS ============ -->
   <section class="view" id="view-ferramentas">
     <div class="view-head">
@@ -392,10 +496,10 @@
 
         <div class="tools">
           <article class="tool lead">
-            <span class="status study">Em estudo</span>
-            <h3>Calculadora de risco &amp; materialidade</h3>
-            <p>Probabilidade, impacto e base de cálculo entram; nível de risco e limite de materialidade saem, prontos para o papel de trabalho. Espaço já reservado para ela.</p>
-            <span class="note">// em estudo</span>
+            <span class="status live">No ar</span>
+            <h3>Calculadora de Matriz de Riscos</h3>
+            <p>Avaliação guiada com COSO ERM, ISO 31000 e práticas do IIA: probabilidade, impacto, controles e apetite entram; risco residual, probabilidade de materialização e relatório saem.</p>
+            <button class="btn btn-primary" data-view="calculadora" style="margin-top:16px;align-self:flex-start;padding:10px 18px;font-size:14px;">Abrir a calculadora →</button>
           </article>
           <article class="tool">
             <span class="status plan">Planejada</span>
@@ -501,13 +605,13 @@
         <div class="sheet-list">
           <div class="sheet">
             <span class="num">XLS·01</span>
-            <div class="s-main"><h3>Matriz de risco</h3><p>Cálculo automático de severidade e heatmap 5×5, pronta para o seu escopo.</p></div>
-            <span class="get soon">Em breve</span>
+            <div class="s-main"><h3>Matriz de riscos</h3><p>Capa executiva + matriz com P×I, nota de risco, apetite, risco residual e probabilidade de materialização — e a aba com a matriz 5×5 pontuada.</p></div>
+            <a class="get" href="downloads/matriz-de-riscos-coisadeauditor.xlsx" download>Baixar →</a>
           </div>
           <div class="sheet">
             <span class="num">DOC·02</span>
-            <div class="s-main"><h3>Modelo de parecer técnico</h3><p>Estrutura de parecer com achados, riscos e recomendações.</p></div>
-            <span class="get soon">Em breve</span>
+            <div class="s-main"><h3>Relatório de auditoria — modelo padrão (IIA/COSO)</h3><p>Estrutura completa e editável: sumário executivo, escopo, metodologia, classificação de severidade, achados no padrão 5 Cs e plano de ação.</p></div>
+            <a class="get" href="downloads/modelo-relatorio-auditoria-coisadeauditor.docx" download>Baixar →</a>
           </div>
         </div>
 
@@ -559,7 +663,7 @@
   })();
 
   (function(){
-    var views=['capa','ferramentas','noticias','planilhas'];
+    var views=['capa','calculadora','ferramentas','noticias','planilhas'];
     var navBtns=document.querySelectorAll('.nav-links button[data-view]');
     function show(name,scrollTo){
       if(views.indexOf(name)<0)name='capa';
@@ -588,6 +692,338 @@
     });
     window.addEventListener('hashchange',function(){show((location.hash||'#capa').slice(1));});
     show((location.hash||'#capa').slice(1));
+  })();
+
+  /* ===== mini-matriz decorativa (capa) ===== */
+  (function(){
+    var g=document.getElementById('flagGrid');if(!g)return;
+    for(var im=5;im>=1;im--)for(var p=1;p<=5;p++){
+      var s=im*p,el=document.createElement('i');
+      el.style.background=s<=6?'#4E9A6B':s<=12?'#D69A35':'#BE4A33';
+      el.style.opacity=(0.5+(s/25)*0.5).toFixed(2);
+      g.appendChild(el);
+    }
+  })();
+
+  /* ===== Calculadora de Matriz de Riscos ===== */
+  (function(){
+    var area=document.getElementById('calcArea'),prog=document.getElementById('calcProg');
+    if(!area)return;
+
+    var PESOS=[0.25,0.20,0.20,0.15,0.20];
+    var CAP={'Baixo':6,'Moderado':12,'Alto':16};
+    var MATZ=['','até 10%','10–30%','30–50%','50–70%','acima de 70%'];
+    var DIMS=['Financeiro','Regulatório/Legal','Reputacional','Operacional','Pessoas & Dados'];
+    var CATS=['Estratégico','Operacional','Financeiro','Conformidade / Regulatório','Tecnologia / Cibersegurança','Fraude','Reputacional','Ambiental / ESG'];
+    var ctx={org:'',escopo:'',apetite:'Moderado',mat:0};
+    var riscos=[],cur=null,step=0;
+
+    function esc(t){return String(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+    function brl(v){return v.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});}
+    function nivel(s){return s<=6?['Baixo','nv-baixo']:s<=12?['Moderado','nv-moderado']:s<=16?['Alto','nv-alto']:['Crítico','nv-critico'];}
+    function heatColor(s){return s<=6?'color-mix(in srgb,#4E9A6B 80%,#fff)':s<=12?'color-mix(in srgb,#D69A35 84%,#fff)':'color-mix(in srgb,#BE4A33 86%,#fff)';}
+    function badge(s){var n=nivel(s);return '<span class="badge-nv '+n[1]+'" style="font-size:11px;padding:3px 10px">'+n[0]+'</span>';}
+
+    var PROB_Q=[
+      {t:'Histórico de ocorrência',h:'Nos últimos 3 anos, este evento (ou um muito parecido)…',o:[
+        'Nunca ocorreu, nem em organizações semelhantes',
+        'Já ocorreu no setor, mas nunca aqui',
+        'Ocorreu aqui pelo menos 1 vez',
+        'Ocorre de vez em quando (ao menos 1× por ano)',
+        'Ocorre com frequência (mensal ou mais)']},
+      {t:'Exposição do processo',h:'Com que frequência e volume o processo exposto ao risco é executado?',o:[
+        'Raramente — evento pontual ou esporádico',
+        'Algumas vezes por mês, volume baixo',
+        'Semanalmente, volume médio',
+        'Diariamente, volume alto',
+        'Continuamente, volume massivo de transações']},
+      {t:'Complexidade da atividade',h:'Quão complexa é a atividade em que o risco pode se materializar?',o:[
+        'Muito simples, padronizada e bem documentada',
+        'Simples, com poucas exceções',
+        'Complexidade média, com algumas exceções e julgamento',
+        'Complexa, muitas etapas e julgamento frequente',
+        'Muito complexa, alto julgamento e pouca padronização']},
+      {t:'Dependência de pessoas',h:'Qual o grau de automação da atividade?',o:[
+        'Totalmente automatizada, sem intervenção manual',
+        'Automatizada, com revisão humana pontual',
+        'Mista: parte automatizada, parte manual',
+        'Principalmente manual, com conferência de terceiros',
+        'Totalmente manual, sem conferência independente']},
+      {t:'Ambiente e mudanças',h:'O ambiente do processo (sistemas, regulação, equipe) está…',o:[
+        'Estável há anos, sem mudanças previstas',
+        'Estável, com mudanças pequenas e planejadas',
+        'Com mudanças moderadas em andamento',
+        'Com muitas mudanças recentes (sistema, equipe ou norma)',
+        'Em alta volatilidade: transformações grandes e simultâneas']}
+    ];
+    var CTRL_Q=[
+      {t:'Desenho dos controles',h:'Existem controles desenhados especificamente para este risco?',o:[
+        'Não existem controles',
+        'Controles informais, dependem de iniciativa individual',
+        'Controles formais cobrindo parte do risco',
+        'Controles formais cobrindo a maior parte do risco',
+        'Desenho robusto, documentado e atualizado']},
+      {t:'Execução dos controles',h:'Na prática, os controles são executados de forma consistente?',o:[
+        'Não são executados',
+        'Executados raramente ou sem padrão definido',
+        'Executados na maioria das vezes, sem evidência formal',
+        'Executados consistentemente, com evidência parcial',
+        'Sempre executados, com evidência completa e tempestiva']},
+      {t:'Automação do controle',h:'O controle depende de pessoas ou de sistema?',o:[
+        '100% manual e espontâneo',
+        'Manual, com roteiro ou checklist definido',
+        'Semiautomatizado (sistema apoia, pessoa decide)',
+        'Automatizado, com exceções tratadas manualmente',
+        'Totalmente automatizado, com trilha de auditoria']},
+      {t:'Monitoramento e testes',h:'O controle já foi testado de forma independente?',o:[
+        'Nunca foi testado',
+        'Testado há mais de 2 anos',
+        'Testes eventuais, com apontamentos ainda abertos',
+        'Testado periodicamente, apontamentos tratados',
+        'Testado periodicamente, com resultados satisfatórios']},
+      {t:'Segregação de funções',h:'Como está a segregação de funções no fluxo?',o:[
+        'Uma única pessoa concentra todo o fluxo',
+        'Segregação mínima, com acúmulos relevantes',
+        'Segregação parcial, com compensações informais',
+        'Segregação adequada na maior parte do fluxo',
+        'Segregação plena, com alçadas definidas e revisadas']}
+    ];
+    function impQ(){
+      var fin = ctx.mat>0 ? [
+        'Até '+brl(ctx.mat*0.1)+' (até 10% da materialidade)',
+        brl(ctx.mat*0.1)+' a '+brl(ctx.mat*0.5)+' (10–50% da materialidade)',
+        brl(ctx.mat*0.5)+' a '+brl(ctx.mat)+' (50–100% da materialidade)',
+        brl(ctx.mat)+' a '+brl(ctx.mat*2)+' (1–2× a materialidade)',
+        'Acima de '+brl(ctx.mat*2)+' (mais de 2× a materialidade)']
+      : ['Perda insignificante, absorvida no orçamento da área',
+        'Perda baixa, sem afetar as metas da área',
+        'Perda moderada, afeta o resultado da área',
+        'Perda alta, afeta o resultado da organização',
+        'Perda severa, compromete objetivos estratégicos'];
+      return [
+        {t:'Impacto financeiro',h:'Se o risco se materializar, qual a perda financeira estimada?',o:fin},
+        {t:'Impacto regulatório e legal',h:'Qual a consequência regulatória ou legal provável?',o:[
+          'Nenhuma implicação regulatória',
+          'Notificação ou exigência leve de órgão regulador',
+          'Multa moderada, TAC ou plano de adequação exigido',
+          'Multa relevante, processos ou restrições operacionais',
+          'Sanção grave: suspensão de operação, cassação ou responsabilização de administradores']},
+        {t:'Impacto reputacional',h:'Qual a exposição de imagem provável?',o:[
+          'Sem exposição externa',
+          'Reclamações pontuais de clientes ou parceiros',
+          'Repercussão local ou perda de clientes pontual',
+          'Repercussão em mídia nacional ou perda relevante de clientes',
+          'Dano duradouro à marca, perda de mercado ou de licença social']},
+        {t:'Impacto operacional',h:'Qual o efeito sobre a continuidade das operações?',o:[
+          'Sem interrupção de processos',
+          'Atraso pontual, absorvido na rotina',
+          'Interrupção parcial de processo relevante (menos de 1 dia)',
+          'Parada de processo crítico por 1 dia ou mais',
+          'Parada prolongada ou perda de capacidade operacional']},
+        {t:'Impacto em pessoas e dados',h:'Qual o efeito sobre pessoas (colaboradores, clientes) e dados pessoais?',o:[
+          'Sem dano a pessoas ou dados',
+          'Incidente interno contido, sem exposição de dados',
+          'Vazamento limitado de dados ou dano leve a pessoas',
+          'Vazamento relevante de dados pessoais (obrigações LGPD)',
+          'Vazamento massivo ou dano grave a pessoas']}
+      ];
+    }
+
+    function optsHTML(prefix,qs,ans){
+      return qs.map(function(q,qi){
+        var name=prefix+qi;
+        return '<div class="q"><div class="q-title">'+(qi+1)+'. '+q.t+'</div><div class="q-help">'+q.h+'</div><div class="opts">'+
+          q.o.map(function(op,oi){
+            var v=oi+1,sel=ans&&ans[qi]===v;
+            return '<label class="opt'+(sel?' sel':'')+'"><input type="radio" name="'+name+'" value="'+v+'"'+(sel?' checked':'')+'><span>'+op+'</span><span class="on">nota '+v+'</span></label>';
+          }).join('')+'</div></div>';
+      }).join('');
+    }
+    function readAns(prefix,n){
+      var out=[];
+      for(var i=0;i<n;i++){var r=area.querySelector('input[name="'+prefix+i+'"]:checked');if(!r)return null;out.push(+r.value);}
+      return out;
+    }
+    function navHTML(back,next){
+      return '<div class="err" id="calcErr" role="alert"></div><div class="calc-nav">'+
+        (back?'<button class="btn btn-ghost" id="calcBack">← '+back+'</button>':'<span></span>')+
+        '<button class="btn btn-primary" id="calcNext">'+next+'</button></div>';
+    }
+    function setProg(){
+      var html='';for(var i=0;i<7;i++)html+='<b class="'+(i<=step?'on':'')+'"></b>';
+      prog.innerHTML=html;
+    }
+    function err(m){var e=document.getElementById('calcErr');if(e)e.textContent=m;}
+    function val(id){var el=document.getElementById(id);return el?el.value.trim():'';}
+    function mini5(Pr,I){
+      var h='<div class="mini5">';
+      for(var im=5;im>=1;im--)for(var p=1;p<=5;p++){
+        var s=im*p,hit=(p===Pr&&im===I);
+        h+='<i style="background:'+heatColor(s)+'"'+(hit?' class="hit"':'')+'></i>';
+      }
+      return h+'</div>';
+    }
+
+    function computa(){
+      var pw=0;for(var i=0;i<5;i++)pw+=cur.p[i]*PESOS[i];
+      var P=Math.min(5,Math.max(1,Math.round(pw)));
+      var I=Math.max.apply(null,cur.i);
+      var dom=DIMS[cur.i.indexOf(I)];
+      var iner=P*I;
+      var matC=cur.c.reduce(function(a,b){return a+b;},0)/5;
+      var mit=(matC-1)/4*0.6;
+      var Pr=Math.max(1,Math.round(P*(1-mit)));
+      var res=Pr*I;
+      var dentro=res<=CAP[ctx.apetite];
+      var nvR=nivel(res)[0];
+      var resposta,prio;
+      if(dentro){resposta='Aceitar e monitorar';prio='O risco residual está dentro do apetite. Formalize a aceitação e acompanhe indicadores.';}
+      else if(nvR==='Baixo'||nvR==='Moderado'){resposta='Mitigar';prio='Reforce os controles existentes para trazer o risco para dentro do apetite.';}
+      else if(nvR==='Alto'){resposta='Mitigar com prioridade';prio='Trate no curto prazo; avalie também transferência (seguros ou cláusulas contratuais).';}
+      else{resposta='Ação imediata — mitigar, transferir ou evitar';prio='Risco crítico fora do apetite: envolva a alta administração e defina plano de ação imediato.';}
+      var notas=[];
+      if(I>=4&&Pr<=2)notas.push('Perfil de baixa frequência e alta severidade: avalie transferência via seguro ou contrato.');
+      if(matC<2.5&&P>=4)notas.push('Probabilidade alta com controles frágeis: reforços rápidos de controle tendem a reduzir bem o residual.');
+      if(cur.i[4]>=4)notas.push('Impacto relevante em dados pessoais: observe os requisitos da LGPD (art. 48 — comunicação de incidentes).');
+      cur.calc={P:P,I:I,dom:dom,iner:iner,matC:matC,mit:mit,Pr:Pr,res:res,dentro:dentro,resposta:resposta,prio:prio,notas:notas};
+      riscos.push(cur);
+    }
+
+    function resultHTML(r){
+      var c=r.calc;
+      return '<div class="calc-card">'+
+      '<span class="eyebrow">Resultado — Risco '+riscos.length+'</span>'+
+      '<h3 style="margin-top:8px">'+esc(r.nome)+'</h3>'+
+      '<p style="color:var(--muted);font-size:13.5px;margin:4px 0 0">'+esc(r.cat)+(r.dono?' · Dono: '+esc(r.dono):'')+'</p>'+
+      '<div class="res-grid">'+
+        '<div class="res-box"><span class="lbl">Risco inerente (sem controles)</span><div class="big-n">'+c.iner+'</div>'+badge(c.iner)+
+          '<p style="font-size:13px;color:var(--ink-2);margin:10px 0 0">P '+c.P+' × I '+c.I+' · dimensão dominante: '+c.dom+'</p></div>'+
+        '<div class="res-box" style="background:#fff;border-color:var(--teal)"><span class="lbl">Risco residual (com controles)</span><div class="big-n">'+c.res+'</div>'+badge(c.res)+
+          '<p style="font-size:13px;color:var(--ink-2);margin:10px 0 0">P '+c.Pr+' × I '+c.I+' · controles mitigam '+Math.round(c.mit*100)+'%</p></div>'+
+        '<div class="res-box"><span class="lbl">Probabilidade de materialização</span><div class="big-n" style="font-size:26px">'+MATZ[c.Pr]+'</div>'+
+          '<p style="font-size:13px;color:var(--ink-2);margin:6px 0 0">Estimativa por faixa, conforme a probabilidade residual.</p></div>'+
+        '<div class="res-box"><span class="lbl">Apetite de risco ('+ctx.apetite+')</span><div class="big-n" style="font-size:26px">'+(c.dentro?'✔ Dentro':'✖ Fora')+'</div>'+
+          '<p style="font-size:13px;color:var(--ink-2);margin:6px 0 0"><b>'+c.resposta+'.</b> '+c.prio+'</p></div>'+
+      '</div>'+
+      '<div style="margin-top:18px"><span class="lbl mono" style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">Posição na matriz 5×5 (residual)</span>'+mini5(c.Pr,c.I)+'</div>'+
+      (c.notas.length?'<div style="margin-top:16px;background:var(--tint);border-left:3px solid var(--teal);border-radius:8px;padding:12px 16px;font-size:14px;color:var(--ink-2)">'+c.notas.map(function(n){return '• '+n;}).join('<br>')+'</div>':'')+
+      '</div>';
+    }
+
+    function reportHTML(){
+      var d=new Date().toLocaleDateString('pt-BR');
+      var rows=riscos.map(function(r,i){var c=r.calc;
+        return '<tr><td>R'+('0'+(i+1)).slice(-2)+'</td><td><b>'+esc(r.nome)+'</b><br><span style="color:var(--muted);font-size:11.5px">'+esc(r.cat)+(r.dono?' · '+esc(r.dono):'')+'</span></td>'+
+        '<td style="text-align:center">'+c.P+'</td><td style="text-align:center">'+c.I+'</td>'+
+        '<td style="text-align:center;white-space:nowrap"><b>'+c.iner+'</b> '+badge(c.iner)+'</td>'+
+        '<td style="text-align:center">'+Math.round((c.matC-1)/4*100)+'%</td>'+
+        '<td style="text-align:center;white-space:nowrap"><b>'+c.res+'</b> '+badge(c.res)+'</td>'+
+        '<td style="text-align:center">'+MATZ[c.Pr]+'</td>'+
+        '<td style="text-align:center">'+(c.dentro?'✔ Dentro':'✖ Fora')+'</td>'+
+        '<td>'+c.resposta+'</td></tr>';}).join('');
+      var fora=riscos.filter(function(r){return !r.calc.dentro;}).length;
+      var altos=riscos.filter(function(r){return r.calc.res>=15;}).length;
+      var counts={};riscos.forEach(function(r){var k=r.calc.Pr+'x'+r.calc.I;counts[k]=(counts[k]||0)+1;});
+      var heat='<div class="mini5" style="max-width:280px">';
+      for(var im=5;im>=1;im--)for(var p=1;p<=5;p++){
+        var n=counts[p+'x'+im]||0;
+        heat+='<i style="background:'+heatColor(im*p)+';display:grid;place-items:center;font:600 12px var(--mono);color:#1c2b27;opacity:'+(n?'1':'.45')+'">'+(n||'')+'</i>';
+      }
+      heat+='</div>';
+      return '<div class="calc-card" id="report-print">'+
+      '<div style="display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:baseline"><div><span class="eyebrow">Relatório de avaliação de riscos</span>'+
+      '<h3 style="font-size:26px;margin-top:8px">'+(ctx.org?esc(ctx.org):'Avaliação de riscos')+'</h3>'+
+      (ctx.escopo?'<p style="margin:6px 0 0;color:var(--ink-2)">Escopo: '+esc(ctx.escopo)+'</p>':'')+'</div>'+
+      '<div class="mono" style="font-size:12px;color:var(--muted);text-align:right">'+d+'<br>Apetite: '+ctx.apetite+(ctx.mat?'<br>Materialidade: '+brl(ctx.mat):'')+'</div></div>'+
+      '<div style="overflow-x:auto"><table class="report-table"><thead><tr><th>ID</th><th>Risco</th><th>P</th><th>I</th><th>Inerente</th><th>Controles</th><th>Residual</th><th>Prob. materialização</th><th>Apetite</th><th>Resposta sugerida</th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
+      '<div style="display:grid;grid-template-columns:auto 1fr;gap:26px;margin-top:22px;align-items:start">'+
+        '<div><div class="mono" style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Mapa 5×5 (residual)</div>'+heat+'</div>'+
+        '<div style="font-size:14px;color:var(--ink-2)"><b>Síntese:</b> '+riscos.length+' risco(s) avaliado(s) · '+fora+' fora do apetite ('+ctx.apetite+') · '+altos+' em nível Alto/Crítico residual.'+
+        '<br><br><b>Observações e recomendações:</b><ul style="margin:8px 0 0;padding-left:18px">'+
+        riscos.map(function(r,i){return '<li style="margin-bottom:6px"><b>R'+('0'+(i+1)).slice(-2)+' — '+esc(r.nome)+':</b> '+r.calc.prio+(r.calc.notas.length?' '+r.calc.notas.join(' '):'')+'</li>';}).join('')+
+        '</ul></div></div>'+
+      '<p style="font-size:11.5px;color:var(--muted);border-top:1px solid var(--line);margin-top:22px;padding-top:12px">Metodologia: probabilidade inerente por média ponderada de 5 fatores (histórico 25%, exposição 20%, complexidade 20%, dependência de pessoas 15%, ambiente 20%); impacto pela maior de 5 dimensões; risco residual com mitigação de até 60% conforme maturidade de controles; escala 5×5: Baixo ≤6 · Moderado 8–12 · Alto 15–16 · Crítico ≥20. Referências: COSO ERM 2017, ISO 31000:2018 e práticas do IIA. Esta ferramenta apoia — e não substitui — o julgamento profissional do auditor. Gerado em coisadeauditor.com.br em '+d+'.</p>'+
+      '</div>'+
+      '<div class="calc-nav no-print" style="margin-top:22px"><button class="btn btn-ghost" id="calcAgain">+ Avaliar outro risco</button>'+
+      '<span style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-ghost" id="calcReset">Recomeçar</button>'+
+      '<button class="btn btn-primary" id="calcPrint">Imprimir / salvar PDF</button></span></div>';
+    }
+
+    function render(){
+      setProg();
+      if(step===0){
+        area.innerHTML='<div class="calc-card"><h3>Contexto da avaliação</h3>'+
+        '<p style="color:var(--ink-2);font-size:15px;margin:8px 0 0">Essas respostas calibram toda a avaliação — em especial o apetite de risco e as faixas de impacto financeiro.</p>'+
+        '<div class="field"><label>Organização / área avaliada</label><input id="fOrg" value="'+esc(ctx.org)+'" placeholder="ex.: Cia Exemplo — Diretoria Financeira"></div>'+
+        '<div class="field"><label>Processo ou escopo</label><input id="fEsc" value="'+esc(ctx.escopo)+'" placeholder="ex.: Contas a pagar / Gestão de acessos"></div>'+
+        '<div class="field"><label>Apetite de risco da organização</label><select id="fApe">'+
+          ['Baixo','Moderado','Alto'].map(function(a){return '<option'+(ctx.apetite===a?' selected':'')+'>'+a+'</option>';}).join('')+
+        '</select><div class="hint">Baixo: só aceita risco residual Baixo · Moderado: aceita até Moderado · Alto: aceita até Alto.</div></div>'+
+        '<div class="field"><label>Base de materialidade em R$ (opcional)</label><input id="fMat" type="number" min="0" step="any" value="'+(ctx.mat||'')+'" placeholder="ex.: 500000"><div class="hint">Se informada, as faixas de impacto financeiro viram percentuais desse valor — como na materialidade de auditoria.</div></div>'+
+        navHTML(null,'Começar a avaliação →')+'</div>';
+      }else if(step===1){
+        cur=cur||{};
+        area.innerHTML='<div class="calc-card"><h3>Risco '+(riscos.length+1)+' — Identificação</h3>'+
+        '<div class="field"><label>Nome do risco *</label><input id="fNome" value="'+esc(cur.nome||'')+'" placeholder="ex.: Acesso indevido a dados sensíveis"></div>'+
+        '<div class="field"><label>Categoria</label><select id="fCat">'+CATS.map(function(c){return '<option'+(cur.cat===c?' selected':'')+'>'+c+'</option>';}).join('')+'</select></div>'+
+        '<div class="field"><label>Descrição / causa raiz</label><textarea id="fDesc" placeholder="O que pode acontecer, por quê, e em que ponto do processo.">'+esc(cur.desc||'')+'</textarea></div>'+
+        '<div class="field"><label>Dono do risco</label><input id="fDono" value="'+esc(cur.dono||'')+'" placeholder="ex.: Gerência de TI"></div>'+
+        navHTML('Contexto','Avaliar probabilidade →')+'</div>';
+      }else if(step===2){
+        area.innerHTML='<div class="calc-card"><h3>Probabilidade — '+esc(cur.nome)+'</h3>'+
+        '<p style="color:var(--ink-2);font-size:14.5px;margin:8px 0 0">Avalie <b>sem considerar os controles</b> (probabilidade inerente) — os controles entram na etapa seguinte.</p>'+
+        optsHTML('p',PROB_Q,cur.p)+navHTML('Identificação','Avaliar impacto →')+'</div>';
+      }else if(step===3){
+        area.innerHTML='<div class="calc-card"><h3>Impacto — '+esc(cur.nome)+'</h3>'+
+        '<p style="color:var(--ink-2);font-size:14.5px;margin:8px 0 0">Considere o cenário realista mais severo. Vale a <b>maior</b> das cinco dimensões — a prática mais conservadora e comum em ERM.</p>'+
+        optsHTML('i',impQ(),cur.i)+navHTML('Probabilidade','Avaliar controles →')+'</div>';
+      }else if(step===4){
+        area.innerHTML='<div class="calc-card"><h3>Controles existentes — '+esc(cur.nome)+'</h3>'+
+        '<p style="color:var(--ink-2);font-size:14.5px;margin:8px 0 0">A maturidade dos controles reduz a probabilidade e gera o <b>risco residual</b>. Redução máxima: 60% — nenhum controle elimina o risco.</p>'+
+        optsHTML('c',CTRL_Q,cur.c)+navHTML('Impacto','Calcular o risco →')+'</div>';
+      }else if(step===5){
+        area.innerHTML=resultHTML(riscos[riscos.length-1])+
+        '<div class="calc-nav" style="margin-top:22px"><button class="btn btn-ghost" id="calcMore">+ Avaliar outro risco</button>'+
+        '<button class="btn btn-primary" id="calcReport">Gerar relatório ('+riscos.length+' risco'+(riscos.length>1?'s':'')+') →</button></div>';
+      }else{
+        area.innerHTML=reportHTML();
+      }
+      var head=document.querySelector('#view-calculadora .view-head');
+      if(head)window.scrollTo({top:head.offsetTop,behavior:'smooth'});
+    }
+
+    area.addEventListener('change',function(e){
+      if(e.target.matches('.opt input')){
+        area.querySelectorAll('input[name="'+e.target.name+'"]').forEach(function(r){r.closest('.opt').classList.toggle('sel',r.checked);});
+      }
+    });
+    area.addEventListener('click',function(e){
+      var id=e.target.id;
+      if(id==='calcNext'){
+        if(step===0){
+          ctx.org=val('fOrg');ctx.escopo=val('fEsc');ctx.apetite=val('fApe')||'Moderado';ctx.mat=parseFloat(val('fMat'))||0;
+          cur={};step=1;render();
+        }else if(step===1){
+          var nome=val('fNome');if(!nome){err('Dê um nome ao risco para continuar.');return;}
+          cur.nome=nome;cur.cat=val('fCat');cur.desc=val('fDesc');cur.dono=val('fDono');step=2;render();
+        }else if(step===2){
+          var a=readAns('p',5);if(!a){err('Responda às 5 perguntas de probabilidade.');return;}
+          cur.p=a;step=3;render();
+        }else if(step===3){
+          var b=readAns('i',5);if(!b){err('Avalie as 5 dimensões de impacto.');return;}
+          cur.i=b;step=4;render();
+        }else if(step===4){
+          var cc=readAns('c',5);if(!cc){err('Responda às 5 perguntas sobre controles.');return;}
+          cur.c=cc;computa();step=5;render();
+        }
+      }
+      else if(id==='calcBack'){step=Math.max(0,step-1);render();}
+      else if(id==='calcMore'||id==='calcAgain'){cur={};step=1;render();}
+      else if(id==='calcReport'){step=6;render();}
+      else if(id==='calcPrint'){window.print();}
+      else if(id==='calcReset'){if(confirm('Apagar todos os riscos avaliados e recomeçar?')){riscos=[];cur=null;step=0;render();}}
+    });
+    render();
   })();
 
   (function(){
